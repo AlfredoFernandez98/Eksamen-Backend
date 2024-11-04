@@ -1,0 +1,69 @@
+### 1. Put DATA in the database
+POST {{url}}/populate
+
+### 2. GET all trips
+GET {{url}}/trips
+
+### 3. GET trip by ID
+GET {{url}}/trips/1
+
+### 4. POST create a trip
+POST {{url}}/trips/create
+Content-Type: application/json
+
+{
+  "starttime": [
+    2024,
+    11,
+    7
+  ],
+  "endtime": [
+    2024,
+    11,
+    9
+  ],
+  "startposition": "test1",
+  "name": "test1",
+  "price": 299.99,
+  "category": "LAKE",
+  "guide": null
+}
+}
+
+### 5. Update a trip
+PUT {{url}}/trips/update/1
+Content-Type: application/json
+
+{
+  "starttime": [
+    2024,
+    11,
+    7
+  ],
+  "endtime": [
+    2024,
+    11,
+    9
+  ],
+  "startposition": "Alfredo",
+  "name": "PERUUUU",
+  "price": 299.99,
+  "category": "LAKE",
+  "guide": null
+}
+
+### 6. DELETE a trip
+DELETE {{url}}/trips/delete/1
+
+### 7. Add a guide to a trip
+PUT {{url}}/trips/addguide/2/guides/3
+
+### 8. trip not found
+GET {{url}}/trips/999
+
+### 9. delete trip not found
+DELETE {{url}}/trips/delete/999
+
+###10. get trips by category
+GET {{url}}/trips/category/forrest
+

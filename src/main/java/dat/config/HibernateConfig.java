@@ -1,5 +1,7 @@
 package dat.config;
 
+import dat.entities.Guide;
+import dat.entities.Trip;
 import dat.security.entities.Role;
 import dat.security.entities.User;
 import dat.utils.Utils;
@@ -41,6 +43,8 @@ public class HibernateConfig {
 
     // TODO: IMPORTANT: Add Entity classes here for them to be registered with Hibernate
     private static void getAnnotationConfiguration(Configuration configuration) {
+        configuration.addAnnotatedClass(Trip.class);
+        configuration.addAnnotatedClass(Guide.class);
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Role.class);
     }
