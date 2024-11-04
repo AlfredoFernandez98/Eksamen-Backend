@@ -207,10 +207,6 @@ public class TripController implements IController<TripDTO> {
             LOGGER.error("Invalid ID format: {}", e.getMessage());
             ctx.status(404);
             ctx.json(new ApiException(404, "Invalid ID format"));
-        } catch (ApiException e) {
-            LOGGER.error("API Error in getTotalPricePerGuide: {}", e.getMessage());
-            ctx.status(e.getStatusCode());
-            ctx.json(new ApiException(e.getStatusCode(), e.getMessage()));
         } catch (Exception e) {
             LOGGER.error("Unexpected error in getTotalPricePerGuide", e);
             ctx.status(500);
