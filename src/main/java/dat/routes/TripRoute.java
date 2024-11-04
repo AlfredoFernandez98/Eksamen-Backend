@@ -18,7 +18,7 @@ public class TripRoute {
             put("/addguide/{tripId}/guides/{guideId}", tripController::addGuideToTrip);
             post("/populate", tripController::populateDatabase);
             delete("/delete/{id}", tripController::delete);
-            put("/category", tripController::getTripsByCategory);
+            get("/category/{category}", tripController::getTripsByCategory);
 
         };
     }

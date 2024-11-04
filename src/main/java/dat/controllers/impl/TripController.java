@@ -179,17 +179,17 @@ public class TripController implements IController<TripDTO> {
     }
 
     // Metode til at populere databasen
-    public void populateDatabase(Context ctx) {
+    public void populateDatabase(Context ctx) throws ApiException {
         dao.populateDatabase();
         ctx.status(201).result("Database populated with sample trips and guides.");
     }
 
     public void getTripsByCategory(Context ctx) {
         try {
-            String categoryParam = ctx.pathParam("category");
+            String categoryParam = ctx.pathParam("category").toUpperCase();
             Set<TripDTO> trips = dao.getTripsByCategory(TripCategory.valueOf(categoryParam));
             ctx.status(200);
-            ctx.json(trips);
+            ctx.json(trips, TripDTO.class);
         } catch (Exception e) {
             LOGGER.error("Unexpected error in getTripsByCategory", e);
             ctx.status(500);
@@ -213,6 +213,5 @@ public class TripController implements IController<TripDTO> {
             ctx.json(new ApiException(500, "Internal server error"));
         }
     }
-
 
 }

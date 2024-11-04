@@ -1,11 +1,11 @@
-### 1. Put DATA in the database
-POST {{url}}/populate
+### 1. POST DATA in the database
+POST {{url}}/trips/populate
 
 ### 2. GET all trips
 GET {{url}}/trips
 
 ### 3. GET trip by ID
-GET {{url}}/trips/1
+GET {{url}}/trips/3
 
 ### 4. POST create a trip
 POST {{url}}/trips/create
@@ -65,5 +65,5 @@ GET {{url}}/trips/999
 DELETE {{url}}/trips/delete/999
 
 ###10. get trips by category
-GET {{url}}/trips/category/forrest
+GET {{url}}/trips/category/forest
 

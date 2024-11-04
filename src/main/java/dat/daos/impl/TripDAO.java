@@ -30,32 +30,43 @@ public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
         return instance;
     }
     // Metode til at populere databasen
-    public void populateDatabase() {
+    public void populateDatabase() throws ApiException {
         EntityManager em = emf.createEntityManager();
 
         try {
+
             em.getTransaction().begin();
 
-            // Opret guides
+            // Opret guides med phone som int
             Guide guide1 = new Guide(new GuideDTO("Alice", "Johnson", "alice.johnson@example.com", 123456789, 5));
             Guide guide2 = new Guide(new GuideDTO("Bob", "Smith", "bob.smith@example.com", 987654321, 10));
 
+            // Tilføj guider til databasen
             em.persist(guide1);
             em.persist(guide2);
 
-            // Opret trips og tildel guider til nogle af dem
+            // Opret trips med tilknyttede guides
             Trip beachTrip = new Trip(new TripDTO(LocalDate.now(), LocalDate.now().plusDays(2),
-                    "Beach Resort", "Tropical Beach Adventure", 499.99, TripCategory.BEACH, null));
+                    "Beach Resort", "Tropical Beach Adventure", 499.99, TripCategory.BEACH, new GuideDTO(guide1)));
+
             Trip mountainTrip = new Trip(new TripDTO(LocalDate.now().plusWeeks(1), LocalDate.now().plusWeeks(1).plusDays(2),
-                    "Mountain Base", "Mountain Climbing Expedition", 799.99, TripCategory.SNOW, null));
+                    "Mountain Base", "Mountain Climbing Expedition", 799.99, TripCategory.SNOW, new GuideDTO(guide2)));
+
+            // Opret trips uden tilknyttede guides
             Trip lakeTrip = new Trip(new TripDTO(LocalDate.now().plusDays(3), LocalDate.now().plusDays(5),
                     "Lake Retreat", "Calm Lake Escape", 299.99, TripCategory.LAKE, null));
+
             Trip forestTrip = new Trip(new TripDTO(LocalDate.now().plusDays(4), LocalDate.now().plusDays(6),
                     "Forest Cabin", "Peaceful Forest Retreat", 399.99, TripCategory.FOREST, null));
 
             // Tildel guider til nogle af turene
-            beachTrip.setGuide(guide1);
-            mountainTrip.setGuide(guide2);
+            beachTrip.setGuide(guide1);  // Sæt guide1 som guide for beachTrip
+            mountainTrip.setGuide(guide2);  // Sæt guide2 som guide for mountainTrip
+
+
+            // Tilføj trips til guider
+            guide1.getTrips().add(beachTrip);
+            guide2.getTrips().add(mountainTrip);
 
             // Persist trips
             em.persist(beachTrip);
@@ -64,7 +75,11 @@ public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
             em.persist(forestTrip);
 
             em.getTransaction().commit();
-        } finally {
+
+
+        }catch (PersistenceException e){
+            throw new ApiException(400, "Something went wrong during populateDatabase");
+        }finally {
             em.close();
         }
     }
@@ -199,7 +214,7 @@ public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
         }
     }
 
-    public Set<TripDTO> getTripsByCategory(TripCategory category) {
+    public Set<TripDTO> getTripsByCategory(TripCategory category) throws ApiException {
         try (EntityManager em = emf.createEntityManager()) {
             return em.createQuery("SELECT t FROM Trip t WHERE t.category = :category", Trip.class)
                     .setParameter("category", category)
@@ -207,6 +222,8 @@ public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
                     .stream()
                     .map(TripDTO::new)
                     .collect(Collectors.toSet());
+        }catch (PersistenceException e){
+            throw new ApiException(400, "Something went wrong during getTripsByCategory");
         }
     }
 
