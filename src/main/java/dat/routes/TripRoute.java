@@ -19,6 +19,7 @@ public class TripRoute {
             post("/populate", tripController::populateDatabase);
             delete("/delete/{id}", tripController::delete);
             get("/category/{category}", tripController::getTripsByCategory);
+            get("/guides/totalprice", tripController::getTotalPricePerGuide);
 
         };
     }

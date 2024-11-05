@@ -12,6 +12,8 @@ import jakarta.persistence.EntityManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class TripController implements IController<TripDTO> {
@@ -199,18 +201,11 @@ public class TripController implements IController<TripDTO> {
 
     public void getTotalPricePerGuide(Context ctx) {
         try {
-            Long guideId = Long.parseLong(ctx.pathParam("guideId"));
-            double totalPrice = dao.getTotalPricePerGuide(guideId);
-            ctx.status(200);
-            ctx.result(String.valueOf(totalPrice));
-        } catch (NumberFormatException e) {
-            LOGGER.error("Invalid ID format: {}", e.getMessage());
-            ctx.status(404);
-            ctx.json(new ApiException(404, "Invalid ID format"));
+            Set<Map<String, Object>> guidePrices = dao.getGuideTotalPrices();
+            ctx.status(200).json(guidePrices);
         } catch (Exception e) {
             LOGGER.error("Unexpected error in getTotalPricePerGuide", e);
-            ctx.status(500);
-            ctx.json(new ApiException(500, "Internal server error"));
+            ctx.status(500).json(new ApiException(500, "Internal server error"));
         }
     }
 

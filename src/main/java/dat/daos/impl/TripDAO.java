@@ -14,8 +14,7 @@ import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
@@ -228,11 +227,27 @@ public class TripDAO implements IDAO<TripDTO>, ITripGuideDAO {
     }
 
 
-    public double getTotalPricePerGuide(Long guideId) {
+    public Set<Map<String, Object>> getGuideTotalPrices() {
         try (EntityManager em = emf.createEntityManager()) {
-            return em.createQuery("SELECT SUM(t.price) FROM Trip t WHERE t.guide.id = :guideId", Double.class)
-                    .setParameter("guideId", guideId)
-                    .getSingleResult();
+            List<Object[]> results = em.createQuery(
+                            "SELECT t.guide.id, SUM(t.price) " +
+                                    "FROM Trip t " +
+                                    "WHERE t.guide IS NOT NULL " +
+                                    "GROUP BY t.guide.id", Object[].class)
+                    .getResultList();
+
+            // Konverter resultaterne til et Set af Map ved hjælp af streams
+            return results.stream()
+                    .map(result -> {
+                        Map<String, Object> guideTotal = new HashMap<>();
+                        guideTotal.put("guideId", result[0]);
+                        guideTotal.put("totalPrice", result[1]);
+                        return guideTotal;
+                    })
+                    .collect(Collectors.toSet());
+        } catch (Exception e) {
+            e.printStackTrace(); // Håndter exception efter behov
+            return Collections.emptySet(); // Returner et tomt Set i tilfælde af fejl
         }
     }
 }

@@ -67,3 +67,6 @@ DELETE {{url}}/trips/delete/999
 ###10. get trips by category
 GET {{url}}/trips/category/forest
 
+### 11. get the total sum price of all trips offered by each guide.
+
+GET {{url}}/trips/guides/totalprice
