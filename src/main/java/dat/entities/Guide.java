@@ -37,8 +37,6 @@ public class Guide {
         this.phone = guideDTO.getPhone();
         this.yearsOfExperience = guideDTO.getYearsOfExperience();
 
-
-
     }
 
 }

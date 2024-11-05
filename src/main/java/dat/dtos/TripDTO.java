@@ -1,18 +1,10 @@
 package dat.dtos;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import dat.entities.Guide;
 import dat.entities.Trip;
 import dat.enums.TripCategory;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-@Data
 
+@Data
 public class TripDTO {
 
     private Long id;
